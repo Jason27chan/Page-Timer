@@ -21,16 +21,13 @@ class App extends React.Component{
     this.nextPage = this.nextPage.bind(this);
     this.prevPage = this.prevPage.bind(this);
     this.img_arr = [page_1, page_2, page_3, page_4, page_5, page_6, page_7, page_8, page_9];
-
   }
-
 
   nextPage() {
     let curr_index = this.state.curr_index;    
     if (++curr_index >= this.img_arr.length)
       curr_index = this.img_arr.lenght - 1;
     this.setState({curr_index: curr_index})
-    // console.log(curr_index);
   }
 
   prevPage() {
@@ -38,25 +35,13 @@ class App extends React.Component{
     if (--curr_index <= -1)
       curr_index = 0;
     this.setState({curr_index: curr_index});
-    // console.log(curr_index);
   }
   
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={this.img_arr[this.state.curr_index]} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <img src={this.img_arr[this.state.curr_index]} className="App-logo" alt="Page" />
           <button onClick={this.prevPage}>prev</button>
           <button onClick={this.nextPage}>next</button>
         </header>
