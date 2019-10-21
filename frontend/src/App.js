@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, withRouter, Route } from "react-router-dom";
 import { Timer } from "easytimer.js";
+import superagent from "superagent";
 
 // TODO There must be a better way to import the pictures
 import page_1 from './img/page_1.png';
@@ -16,8 +17,6 @@ import page_9 from './img/page_9.png';
 import './App.css';
 import Results from './results.js';
 
-
-
 /**
  * Application for tracking time spent on each page
  */
@@ -25,48 +24,64 @@ class App extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      curr_index: 1
+      curr_index: 1,
+      stopwatchArr: {}
     };
     this.nextPage = this.nextPage.bind(this);
     this.prevPage = this.prevPage.bind(this);
+    this.printTimes = this.printTimes.bind(this);
+
+    // array of images
     this.imgArr = [page_1, page_2, page_3, page_4, page_5, page_6, page_7, page_8, page_9];
-    this.stopwatchArr = [];
+
+    // Set up timers for each page
+    let stopwatchArr = [];
     for (let i = 0; i < this.imgArr.length; i++) {
-      this.stopwatchArr.push(new Timer());
+      stopwatchArr.push(new Timer());
     }
-    console.log(this.stopwatchArr);
-    this.stopwatchArr[this.state.curr_index].start();
-    console.log(this.stopwatchArr[this.state.curr_index].getTimeValues());
+    stopwatchArr[this.state.curr_index].start();
+    this.state.stopwatchArr =  stopwatchArr;
   }
 
   /**
    * Increment the current index and update the state
    * If at last page, do nothing
+   * Also pauses previous timer and starts new timer
    */
   nextPage() {
-    console.log(this.stopwatchArr[this.state.curr_index].getTimeValues().seconds);
-    let curr_index = this.state.curr_index;  
-    this.stopwatchArr[curr_index].pause();  
+    let curr_index = this.state.curr_index;
+    let stopwatchArr = this.state.stopwatchArr;
+    stopwatchArr[curr_index].pause(); 
     if (++curr_index >= this.imgArr.length)
       curr_index = this.imgArr.length - 1;
-    this.setState({curr_index: curr_index})
-    this.stopwatchArr[curr_index].start();
+    stopwatchArr[curr_index].start();
+    this.setState({curr_index: curr_index, stopwatchArr: stopwatchArr})
   }
 
   /**
    * Decrement the current index and update the state
    * If at first page, do nothing
+   * Also pauses previous timer and starts new timer
    */
   prevPage() {
-    console.log(this.stopwatchArr[this.state.curr_index].getTimeValues().seconds);
     let curr_index = this.state.curr_index;
-    this.stopwatchArr[curr_index].pause();  
+    let stopwatchArr = this.state.stopwatchArr;
+    stopwatchArr[curr_index].pause(); 
     if (--curr_index <= -1)
       curr_index = 0;
-    this.setState({curr_index: curr_index});
-    this.stopwatchArr[curr_index].start();  
+    stopwatchArr[curr_index].start();  
+    this.setState({curr_index: curr_index, stopwatchArr: stopwatchArr})
   }
+
   
+  printTimes() {
+    let times = [];
+    for (let i = 0; i < this.state.stopwatchArr.length; i++) {
+      times.push(this.state.stopwatchArr[i].getTimeValues().seconds);
+    }
+    console.log(times);
+  }
+
   render() {
     return (
       <div className="App">
@@ -75,8 +90,8 @@ class App extends React.Component{
           <img src={this.imgArr[this.state.curr_index]} className="App-logo" alt="Page" />
           <button onClick={this.prevPage}>prev</button>
           <button onClick={this.nextPage}>next</button>
-          <button><a href="/results">End Session</a></button>
-          <Route path='/results' component={Results}></Route>
+          <button onClick={this.printTimes}><a href="/results">End Session</a></button>
+          <Route path='/results' render={(props) => <Results times={this.state.stopwatchArr} {...props}></Results>}></Route>
         </header>
         </Router>
       </div>
