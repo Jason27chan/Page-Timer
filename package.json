@@ -1,0 +1,22 @@
+{
+  "name": "page-timer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jason27chan/Page-Timer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jason27chan/Page-Timer/issues"
+  },
+  "homepage": "https://github.com/Jason27chan/Page-Timer#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
