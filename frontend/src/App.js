@@ -26,7 +26,7 @@ class App extends React.Component{
   nextPage() {
     let curr_index = this.state.curr_index;    
     if (++curr_index >= this.img_arr.length)
-      curr_index = this.img_arr.lenght - 1;
+      curr_index = this.img_arr.length - 1;
     this.setState({curr_index: curr_index})
   }
 
